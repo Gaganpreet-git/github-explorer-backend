@@ -2,7 +2,7 @@ const express = require("express");
 const errorHandler = require("./middlewares/errorHandler");
 const app = express();
 
-const userRoutes = require("./controllers/user.controller");
+const userRoutes = require("./routes/user.routes");
 
 // Middleware to parse json request body.
 app.use(express.json());
