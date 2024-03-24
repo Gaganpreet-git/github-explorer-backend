@@ -1,6 +1,13 @@
 const catchAsync = require("../utils/catchAsync");
+const userService = require("../services/user.service");
 
-const saveUser = async (req, res) => {};
+const saveUser = async (req, res) => {
+  const { username } = req.params;
+
+  const user = await userService.saveUser(username);
+
+  res.status(200).json(user);
+};
 const getMutualFollowers = async (req, res) => {};
 const searchUsers = async (req, res) => {};
 const deleteUser = async (req, res) => {};
