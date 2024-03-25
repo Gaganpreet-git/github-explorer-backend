@@ -1,5 +1,6 @@
 const axios = require("axios");
 const User = require("../models/User.model");
+const Friend = require("../models/Friend.model");
 
 const saveUser = async (username) => {
   // Check if the user is already in the database.
@@ -39,4 +40,53 @@ const saveUser = async (username) => {
   return savedUser;
 };
 
-module.exports = { saveUser };
+const getMutualFollowers = async (username) => {
+  // Fetch mutual followers from databse
+  const existingMutualFollowers = await Friend.findOne({ username });
+  // console.log(existingMutualFollowers);
+
+  // If mutual followers present in databse return it
+  if (existingMutualFollowers && existingMutualFollowers.length) {
+    return existingMutualFollowers.mutualFollowers;
+  }
+
+  const github_API_URL = process.env.GITHUB_API_URL;
+
+  // Fetches the followers from the github API
+  const followers = await axios.get(
+    `${github_API_URL}/users/${username}/followers`
+  );
+
+  // Fetches the following from the github API
+  const following = await axios.get(
+    `${github_API_URL}/users/${username}/following`
+  );
+
+  // If no followers or following then mutual followers not possible.
+  if (!followers.data.length || !following.data.length) {
+    return [];
+  }
+
+  // Create an array of followers username.
+  const followersName = followers.data.map((follower) => {
+    return follower.login;
+  });
+
+  // Create an array of followings username.
+  const followingsName = following.data.map((follower) => {
+    return follower.login;
+  });
+
+  // Find mutual followers.
+  const mutualFollowers = followersName.filter((follower) => {
+    return followingsName.includes(follower);
+  });
+
+  // Save mutual followers to the database
+  const saved = await Friend.create({ username, mutualFollowers });
+
+  // Return mutual followers
+  return saved.mutualFollowers;
+};
+
+module.exports = { saveUser, getMutualFollowers };
