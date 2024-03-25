@@ -8,7 +8,11 @@ const saveUser = async (req, res) => {
 
   res.status(200).json(user);
 };
-const getMutualFollowers = async (req, res) => {};
+const getMutualFollowers = async (req, res) => {
+  const { username } = req.params;
+  const mutualFollowers = await userService.getMutualFollowers(username);
+  res.status(200).json(mutualFollowers);
+};
 const searchUsers = async (req, res) => {};
 const deleteUser = async (req, res) => {};
 const updateUser = async (req, res) => {};
