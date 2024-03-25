@@ -1,6 +1,7 @@
 const axios = require("axios");
 const User = require("../models/User.model");
 const Friend = require("../models/Friend.model");
+const ApiError = require("../utils/ApiError");
 
 const saveUser = async (username) => {
   // Check if the user is already in the database.
@@ -89,4 +90,49 @@ const getMutualFollowers = async (username) => {
   return saved.mutualFollowers;
 };
 
-module.exports = { saveUser, getMutualFollowers };
+const searchUsers = async (
+  username,
+  company,
+  blog,
+  location,
+  email,
+  created_at
+) => {
+  const query = {};
+
+  if (username) {
+    query.username = username;
+  }
+
+  if (company) {
+    query.company = company;
+  }
+
+  if (blog) {
+    query.blog = blog;
+  }
+
+  if (location) {
+    query.location = location;
+  }
+
+  if (email) {
+    query.email = email;
+  }
+
+  if (created_at) {
+    query.created_at = created_at;
+  }
+
+  // Find users in database with the received queries.
+  const users = await User.find(query);
+
+  // If no users found then throw an error.
+  if (!users.length) {
+    throw new ApiError(404, "User not found");
+  }
+
+  return users;
+};
+
+module.exports = { saveUser, getMutualFollowers, searchUsers };
