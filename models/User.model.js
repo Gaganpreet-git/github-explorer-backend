@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema({
   following: { type: "number", default: 0 },
   created_at: { type: "string", required: true },
   updated_at: { type: "string", required: true },
+  deleted: { type: "boolean", default: false },
 });
 
 const User = mongoose.model("User", userSchema);
