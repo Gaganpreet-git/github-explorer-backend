@@ -13,7 +13,24 @@ const getMutualFollowers = async (req, res) => {
   const mutualFollowers = await userService.getMutualFollowers(username);
   res.status(200).json(mutualFollowers);
 };
-const searchUsers = async (req, res) => {};
+
+const searchUsers = async (req, res) => {
+  // Extract query parameters
+  const { username, company, blog, location, email, created_at } = req.query;
+
+  // Call service with query parameters
+  const users = await userService.searchUsers(
+    username,
+    company,
+    blog,
+    location,
+    email,
+    created_at
+  );
+
+  // Return users to client.
+  res.status(200).json(users);
+};
 const deleteUser = async (req, res) => {};
 const updateUser = async (req, res) => {};
 const getUsers = async (req, res) => {};
