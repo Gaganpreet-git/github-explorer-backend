@@ -135,4 +135,18 @@ const searchUsers = async (
   return users;
 };
 
-module.exports = { saveUser, getMutualFollowers, searchUsers };
+const deleteUser = async (username) => {
+  const deletedUser = await User.findOneAndUpdate(
+    { username },
+    { deleted: true },
+    { new: true }
+  );
+
+  if (!deletedUser) {
+    throw new ApiError(404, "User not found");
+  }
+
+  return deletedUser;
+};
+
+module.exports = { saveUser, getMutualFollowers, searchUsers, deleteUser };
