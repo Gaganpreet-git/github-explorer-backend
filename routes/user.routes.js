@@ -6,8 +6,10 @@ const router = express.Router();
 router.get("/save-user/:username", userController.saveUser);
 
 // Route to find mutual followers.
-router.get("/find-mutual-followers/:username"),
-  userController.getMutualFollowers;
+router.get(
+  "/find-mutual-followers/:username",
+  userController.getMutualFollowers
+);
 
 // Route to search users.
 router.get("/search-users", userController.searchUsers);
