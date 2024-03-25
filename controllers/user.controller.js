@@ -31,7 +31,16 @@ const searchUsers = async (req, res) => {
   // Return users to client.
   res.status(200).json(users);
 };
-const deleteUser = async (req, res) => {};
+const deleteUser = async (req, res) => {
+  // Extract "username" from query parameters
+  const { username } = req.params;
+
+  // Call service with "username" query parameters
+  const deletedUser = await userService.deleteUser(username);
+
+  // Return deleted user to client.
+  res.status(204).json(deletedUser);
+};
 const updateUser = async (req, res) => {};
 const getUsers = async (req, res) => {};
 
