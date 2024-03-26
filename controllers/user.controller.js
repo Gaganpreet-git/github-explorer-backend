@@ -41,7 +41,27 @@ const deleteUser = async (req, res) => {
   // Return deleted user to client.
   res.status(204).json(deletedUser);
 };
-const updateUser = async (req, res) => {};
+
+const updateUser = async (req, res) => {
+  // Extract "username" from request parameters
+  const { username } = req.params;
+
+  // Extract "company", "blog", "location", "email", and "bio" from body
+  const { company, blog, location, email, bio } = req.body;
+
+  // Call service with "username", "company", "blog", "location", "email", and "bio" body parameters
+  const updatedUser = await userService.updateUser(
+    username,
+    company,
+    blog,
+    location,
+    email,
+    bio
+  );
+
+  // Return updated user to client.
+  res.status(200).json(updatedUser);
+};
 const getUsers = async (req, res) => {};
 
 module.exports = {
