@@ -149,4 +149,46 @@ const deleteUser = async (username) => {
   return deletedUser;
 };
 
-module.exports = { saveUser, getMutualFollowers, searchUsers, deleteUser };
+const updateUser = async (username, company, blog, location, email, bio) => {
+  const updateQuery = {};
+
+  if (company) {
+    updateQuery.company = company;
+  }
+
+  if (blog) {
+    updateQuery.blog = blog;
+  }
+
+  if (location) {
+    updateQuery.location = location;
+  }
+
+  if (email) {
+    updateQuery.email = email;
+  }
+
+  if (bio) {
+    updateQuery.bio = bio;
+  }
+
+  // Find and update user in database.
+  const updatedUser = await User.findOneAndUpdate({ username }, updateQuery, {
+    new: true,
+  });
+
+  // If no user found then throw an error.
+  if (!updatedUser) {
+    throw new ApiError(404, "User not found");
+  }
+
+  return updatedUser;
+};
+
+module.exports = {
+  saveUser,
+  getMutualFollowers,
+  searchUsers,
+  deleteUser,
+  updateUser,
+};
