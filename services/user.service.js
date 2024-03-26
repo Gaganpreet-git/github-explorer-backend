@@ -185,10 +185,26 @@ const updateUser = async (username, company, blog, location, email, bio) => {
   return updatedUser;
 };
 
+const getUsers = async (sortBy) => {
+  let users = [];
+
+  if (!sortBy) {
+    users = await User.find({});
+  } else {
+    users = await User.find({}).sort({ [sortBy]: -1 });
+  }
+
+  // If no users found then throw an error.
+  if (!users.length) throw new ApiError(404, "User not found");
+
+  return users;
+};
+
 module.exports = {
   saveUser,
   getMutualFollowers,
   searchUsers,
   deleteUser,
   updateUser,
+  getUsers,
 };
