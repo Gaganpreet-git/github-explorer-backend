@@ -62,7 +62,16 @@ const updateUser = async (req, res) => {
   // Return updated user to client.
   res.status(200).json(updatedUser);
 };
-const getUsers = async (req, res) => {};
+const getUsers = async (req, res) => {
+  // Extract "sortBy" from query parameters
+  const { sortBy } = req.query;
+
+  // Call service with "sortBy" query parameters
+  const users = await userService.getUsers(sortBy);
+
+  // Return users to client.
+  res.status(200).json(users);
+};
 
 module.exports = {
   saveUser: catchAsync(saveUser),
