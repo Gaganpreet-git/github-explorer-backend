@@ -44,13 +44,24 @@ const saveUser = async (username) => {
 const getMutualFollowers = async (username) => {
   // Fetch mutual followers from databse
   const existingMutualFollowers = await Friend.findOne({ username });
-  // console.log(existingMutualFollowers);
 
   // If mutual followers present in databse return it
   if (existingMutualFollowers && existingMutualFollowers.length) {
     return existingMutualFollowers.mutualFollowers;
   }
 
+  // Find mutual followers
+  const mutualFollowers = await findMutualFollowers(username);
+
+  // Save mutual followers to the database
+  const saved = await Friend.create({ username, mutualFollowers });
+
+  // Return mutual followers
+  return saved.mutualFollowers;
+};
+
+/*Function to find mutual followers of a user. */
+const findMutualFollowers = async (username) => {
   // Fetches the followers from the github API
   const followers = await axios.get(
     `${github_API_URL}/users/${username}/followers`
@@ -81,11 +92,7 @@ const getMutualFollowers = async (username) => {
     return followingsName.includes(follower);
   });
 
-  // Save mutual followers to the database
-  const saved = await Friend.create({ username, mutualFollowers });
-
-  // Return mutual followers
-  return saved.mutualFollowers;
+  return mutualFollowers;
 };
 
 const searchUsers = async (
