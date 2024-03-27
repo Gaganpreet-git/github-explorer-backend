@@ -3,6 +3,8 @@ const User = require("../models/User.model");
 const Friend = require("../models/Friend.model");
 const ApiError = require("../utils/ApiError");
 
+const github_API_URL = process.env.GITHUB_API_URL;
+
 const saveUser = async (username) => {
   // Check if the user is already in the database.
   const existingUser = await User.findOne({ username });
@@ -11,8 +13,6 @@ const saveUser = async (username) => {
   if (existingUser) {
     return existingUser;
   }
-
-  const github_API_URL = process.env.GITHUB_API_URL;
 
   // Fetches the user from the github API
   const user = await axios.get(`${github_API_URL}/users/${username}`);
@@ -50,8 +50,6 @@ const getMutualFollowers = async (username) => {
   if (existingMutualFollowers && existingMutualFollowers.length) {
     return existingMutualFollowers.mutualFollowers;
   }
-
-  const github_API_URL = process.env.GITHUB_API_URL;
 
   // Fetches the followers from the github API
   const followers = await axios.get(
